@@ -2,11 +2,11 @@ from flask import Flask
 import numpy
 import pandas as pd
 from pandas import DataFrame
-import statsmodels
 import pymysql
 import pymysql.cursors
 from sshtunnel import SSHTunnelForwarder
 from sklearn import linear_model
+import datetime as dt
 app = Flask(__name__)
 
 def query(q):
@@ -30,9 +30,13 @@ def query(q):
 def hello_world():
     return 'Hello, World!' 
 
-df = query('Select * from BBC.Mortgage_Rates as mr inner join BBC.Mortgage_Backed_Securities as mbs on mr.date = mbs.date;')
+df = query('Select mr.Date, Mortgage_Rate, Close, Volume, Open, High, Low from BBC.Mortgage_Rates as mr inner join BBC.Mortgage_Backed_Securities as mbs on mr.date = mbs.date;')
 x = df
+x['Date'] = pd.to_datetime(x['Date'])
+x['Date'] = x['Date'].map(dt.datetime.toordinal)
+
 y = df['Mortgage_Rate']
 lm = linear_model.LinearRegression()
 model = lm.fit(x,y)
-print(df)
+predictions = lm.predict(x)
+print(predictions[0:5])

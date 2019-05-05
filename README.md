@@ -5,10 +5,14 @@ sudo apt-get install python-virtualenv
 ```
 
 Create your virtual environment:
+```
 virtualenv venv
+```
 
 Start virtual environment first:
+```
 . venv/bin/activate
+```
 
 To install dependencies (from within the virtual environment):
 ```

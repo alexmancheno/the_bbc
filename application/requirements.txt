@@ -5,3 +5,4 @@ scipy
 sshtunnel
 pymysql
 sklearn
+matplotlib

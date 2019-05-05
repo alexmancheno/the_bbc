@@ -1,4 +1,4 @@
-## Only do if you want to use with virtual environment
+#### Only do if you want to use with virtual environment
 Install virtualenv:
 ```
 sudo apt-get install python-virtualenv
@@ -11,7 +11,7 @@ virtualenv venv
 
 Start virtual environment first:
 ```
-. venv/bin/activate
+source venv/bin/activate
 ```
 
 To install dependencies (from within the virtual environment):
@@ -19,7 +19,7 @@ To install dependencies (from within the virtual environment):
 pip install -r requirements.txt
 ```
 
-If any packages were not installed, manually install:
+If any packages were not installed, you need to manually install. Example:
 ```
 pip install pandas
 ```

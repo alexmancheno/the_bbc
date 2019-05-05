@@ -1,8 +1,9 @@
-numpy
 flask
-statsmodels
-scipy
-sshtunnel
+numpy
+pandas
 pymysql
+pymysql.cursors
+sshtunnel
 sklearn
 matplotlib
+datetime

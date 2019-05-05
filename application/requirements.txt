@@ -1,2 +1,6 @@
 numpy
 flask
+statsmodels
+scipy
+sshtunnel
+pymysql

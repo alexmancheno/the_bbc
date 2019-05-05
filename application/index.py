@@ -33,10 +33,13 @@ def hello_world():
 df = query('Select mr.Date, Mortgage_Rate, Close, Volume, Open, High, Low from BBC.Mortgage_Rates as mr inner join BBC.Mortgage_Backed_Securities as mbs on mr.date = mbs.date;')
 x = df
 x['Date'] = pd.to_datetime(x['Date'])
+x = x.drop('Mortgage_Rate', axis=1)
 x['Date'] = x['Date'].map(dt.datetime.toordinal)
 
+print(x)
 y = df['Mortgage_Rate']
 lm = linear_model.LinearRegression()
 model = lm.fit(x,y)
 predictions = lm.predict(x)
 print(predictions[0:5])
+print(lm.score(x, y))

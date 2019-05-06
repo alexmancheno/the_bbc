@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 
-from datascience import query, linear_regression
+from datascience import query, linear_regression, callProc
 app = Flask(__name__)
 
 # Goal is to return JSON after using the methods in datascience.py
@@ -21,8 +21,10 @@ def targets():
 @app.route('/dependents')
 def dependents():
     #return possible columns to depend on
+    proc = callProc("GetColumns")
     result = ["DEPEND1", "DEPEND2"]
-    return result
+    print(proc)
+    return jsonify(proc)
 
 if __name__ == '__main__':
     app.run(port=8080)

@@ -11,6 +11,20 @@ import matplotlib as mpl
 from matplotlib import pyplot as plt
 import datetime as dt
 
+def callProc(procName):
+    with SSHTunnelForwarder(
+        ('97.107.142.134', 22), 
+        ssh_username="root",
+        ssh_password="the_bbc123",
+        remote_bind_address=('localhost', 3306)
+    )as server:
+        conn = pymysql.connect(host='localhost', user='admin', password='radman', db='BBC', port=server.local_bind_port)
+        cursor = conn.cursor();
+        cursor.callproc(procName)
+        result = cursor.fetchall();
+    return result
+    
+
 def query(q):
     with SSHTunnelForwarder(
         ('97.107.142.134', 22),
@@ -49,7 +63,7 @@ def linear_regression(s):
 
     # run a linear regression holding out 20% of data as test data
     lm = linear_model.LinearRegression()
-    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=0.2)
+    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=0)
     lm.fit(x_train, y_train)
     y_pred = lm.predict(x_test)
     results['holdout_linear_regression_score'] = lm.score(x, y)

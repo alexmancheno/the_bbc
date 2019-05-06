@@ -7,6 +7,7 @@ from sshtunnel import SSHTunnelForwarder
 from sklearn import linear_model
 from sklearn.model_selection import train_test_split, KFold
 from sklearn.svm import SVR
+import matplotlib as mpl
 from matplotlib import pyplot as plt
 import datetime as dt
 
@@ -46,19 +47,11 @@ def linear_regression(s):
     # change the data type of 'date' to a type that sklearn can read
     x['Date'] = x['Date'].map(dt.datetime.toordinal)
 
-
-    # run a linear regression (no techniques)
-    lm = linear_model.LinearRegression()
-    model = lm.fit(x,y)
-    predictions = lm.predict(x)
-    results['regular_linear_regression_score'] = lm.score(x,y)
-    # print(predictions[0:5])
-
     # run a linear regression holding out 20% of data as test data
     lm = linear_model.LinearRegression()
-    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2)
-    model = lm.fit(x_train, y_train)
-    predictions = lm.predict(x_test)
+    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=0.2)
+    lm.fit(x_train, y_train)
+    y_pred = lm.predict(x_test)
     results['holdout_linear_regression_score'] = lm.score(x, y)
 
     # run a linear regression using K-Folds Cross Validation
@@ -73,6 +66,6 @@ def linear_regression(s):
         model = lm.fit(x_train, y_train)
         predictions = lm.predict(x_test)
         scores.append(lm.score(x, y))
-    
+    plt.savefig('test.png')
     results['kfolds_linear_regression_score'] = np.mean(scores)
     return results

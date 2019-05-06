@@ -16,23 +16,23 @@ source venv/bin/activate
 
 To install dependencies (from within the virtual environment):
 ```
-pip install -r requirements.txt
+pip3 install -r requirements.txt
 ```
 
 If any packages were not installed, you need to manually install. Example:
 ```
-pip install pandas
+pip3 install pandas
 ```
 
-To run the Flask app:
+To run:
 ```
-export FLASK_APP=index.py
-flask run
+python3 index.py
 ```
 
 To transfer the python code to server:
 ```
 scp -r *.py root@97.107.142.134:/root/apps/the_bbc
+scp requirements.txt root@97.107.142.134:/root/apps/the_bbc
 ```
 
 To restart the python flask server (while logged in the server):

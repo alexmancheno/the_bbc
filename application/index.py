@@ -11,3 +11,16 @@ def hello_world():
     results = linear_regression(query)
     
     return jsonify(results)
+
+@app.route('/indepents')
+def targets():
+    #return possible variables/columns to target from DB
+    result = ["INDEPEND1","INDEPEND2"]
+    return result
+
+@app.route('/dependents')
+def dependents():
+    #return possible columns to depend on
+    result = ["DEPEND1", "DEPEND2"]
+    return result
+

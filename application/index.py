@@ -17,6 +17,7 @@ table = {
 }
 
 # Goal is to return JSON after using the methods in datascience.py
+# Example usage: http://localhost:8080/regression?vars=MBS,U
 @app.route('/regression')
 def regression():
     global table
@@ -31,6 +32,7 @@ def regression():
     results = linear_regression(query + ';')
     return jsonify(results)
 
+# Returns a list of the independent variables we can use
 @app.route('/vars')
 def vars():
     global table

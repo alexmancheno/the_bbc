@@ -7,12 +7,12 @@ CORS(app)
 
 table = {
     'CPI': {'table_name': 'BBC.Consumer_Price_Index_View', 'column_name':  'BBC.Consumer_Price_Index_View.Average_Cost'},
-    'CPIHA': {'table_name': 'BBC.CPI_Average_Housing_View', 'column_name': 'BBC.CPI_Average_Housing_View.Housing_Average'},
+    'CPIHA': {'table_name': 'BBC.CPI_Housing_Average_View', 'column_name': 'BBC.CPI_Average_Housing_View.Housing_Average'},
     'DJI' : {'table_name': 'BBC.Dow_Jones_Index_View', 'column_name': 'BBC.Dow_Jones_Index_View.Close'},
     'FIR' : {'table_name': 'BBC.Federal_Interest_Rates_View', 'column_name': 'BBC.Federal_Interest_Rates_View.Prime_Rate'},
     'GDP': {'table_name': 'BBC.Gross_Domestic_Product_View', 'column_name': 'BBC.Gross_Domestic_Product_View.GDP'},
     'GSPC': {'table_name': 'BBC.GSPC_View', 'column_name': 'BBC.GSPC_View.close'},
-    'MBS': {'table_name': 'BBC.Mortgage_Backed_Securities_View', 'column_name': 'BBC.Mortgage_Backed_Securities_view.Close'},
+    'MBS': {'table_name': 'BBC.Mortgage_Backed_Securities_View', 'column_name': 'BBC.Mortgage_Backed_Securities_View.Close'},
     'U': {'table_name': 'BBC.Unemployment_View', 'column_name': 'BBC.Unemployment_View.Unemployment_Rate'}
 }
 
@@ -27,7 +27,7 @@ def regression():
     query += ' from BBC.Mortgage_Rates_View'
     for var in independent_vars:
         query += ' inner join %s on Mortgage_Rates_View.Date = %s.Date' % (table[var]['table_name'], table[var]['table_name']) 
-
+    print(query + ';')
     results = linear_regression(query + ';')
     return jsonify(results)
 

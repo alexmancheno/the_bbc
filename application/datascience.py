@@ -11,6 +11,26 @@ import matplotlib as mpl
 from matplotlib import pyplot as plt
 import datetime as dt
 
+table = {
+    'CPI': {'table_name': 'BBC.Consumer_Price_Index_View', 'column_name':  'BBC.Consumer_Price_Index_View.Average_Cost'},
+    'CPIHA': {'table_name': 'BBC.CPI_Housing_Average_View', 'column_name': 'BBC.CPI_Average_Housing_View.Housing_Average'},
+    'DJI' : {'table_name': 'BBC.Dow_Jones_Index_View', 'column_name': 'BBC.Dow_Jones_Index_View.Close'},
+    'FIR' : {'table_name': 'BBC.Federal_Interest_Rates_View', 'column_name': 'BBC.Federal_Interest_Rates_View.Prime_Rate'},
+    'GDP': {'table_name': 'BBC.Gross_Domestic_Product_View', 'column_name': 'BBC.Gross_Domestic_Product_View.GDP'},
+    'GSPC': {'table_name': 'BBC.GSPC_View', 'column_name': 'BBC.GSPC_View.close'},
+    'MBS': {'table_name': 'BBC.Mortgage_Backed_Securities_View', 'column_name': 'BBC.Mortgage_Backed_Securities_View.Close'},
+    'U': {'table_name': 'BBC.Unemployment_View', 'column_name': 'BBC.Unemployment_View.Unemployment_Rate'}
+}
+
+def generate_query(independent_vars):
+    query = 'select Mortgage_Rates_View.Date, Mortgage_Rates_View.Mortgage_Rate'
+    for var in independent_vars:
+        query += ', %s' % table[var]['column_name']
+    query += ' from BBC.Mortgage_Rates_View'
+    for var in independent_vars:
+        query += ' inner join %s on Mortgage_Rates_View.Date = %s.Date' % (table[var]['table_name'], table[var]['table_name']) 
+    return query + ';'
+
 def callProc(procName):
     with SSHTunnelForwarder(
         ('97.107.142.134', 22), 
@@ -47,19 +67,13 @@ def linear_regression(s):
     results = {}
 
     # query database and return results as a DataFrame
-    x = query(s)
-    
-    # clean the format of the 'Date' column
-    x['Date'] = pd.to_datetime(x['Date'])
+    x = query(s).drop('Date', axis=1)
 
     # the target variable
     y = x['Mortgage_Rate']
 
     # drop the target variable from the x-axis
     x = x.drop('Mortgage_Rate', axis=1)
-
-    # change the data type of 'date' to a type that sklearn can read
-    x['Date'] = x['Date'].map(dt.datetime.toordinal)
 
     # run a linear regression holding out 20% of data as test data
     lm = linear_model.LinearRegression()

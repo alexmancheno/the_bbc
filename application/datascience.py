@@ -57,8 +57,6 @@ def linear_regression(s):
 
     # drop the target variable from the x-axis
     x = x.drop('Mortgage_Rate', axis=1)
-    # print(x)
-    # print(y)
 
     # change the data type of 'date' to a type that sklearn can read
     x['Date'] = x['Date'].map(dt.datetime.toordinal)

@@ -1,4 +1,9 @@
 #### Only do if you want to use with virtual environment
+Install python3 pip:
+```
+sudo apt-get install python3-pip
+```
+
 Install virtualenv:
 ```
 sudo apt-get install python-virtualenv

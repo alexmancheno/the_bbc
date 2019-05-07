@@ -83,27 +83,36 @@ def linear_regression(s):
 
     # start predicting!
     # run linear regressions for each independent variable
-    
     independent_var_predictions = {}
+    offset = x['Date'].values[-1] - x['Date'].values[-2]
+    start = x['Date'][x.index.max()]
     local_x = x.filter(['Date'])
+    # print('local_x: ', local_x)
     for column in x.drop('Date', axis=1):
         local_y = x.filter([column])
+        # print('local_y: ', local_y)
         lm = linear_model.LinearRegression()
-        lm.fit(local_x, local_y)
-        offset = x['Date'].values[-1] - x['Date'].values[-2]
-        length = x.index.max()
+        lm.fit(local_x, local_y) # train the linear regression model
         arr = []
-        print(lm.coef_)
-        print(lm.intercept_)
-        # for i in range(1, 6):
+        coefficient = lm.coef_[0][0]
+        intercept = lm.intercept_[0]
+        # print('coef: ', coefficient)
+        # print('intercept: ', intercept)
+        # print('start: ', start)
+        # print('offset: ', offset)
+        # add the next 5 predicted values for independent values
+        for i in range(1, 6):
+            arr.append(coefficient * (start + i * offset) + intercept)
+        independent_var_predictions[column] = arr
 
-
+    # print(independent_var_predictions)
     # append the next 5 rows to the x-axis and y-axis
-    offset = x['Date'].values[-1] - x['Date'].values[-2]
     length = x.index.max()
-    # print('offset: ', offset, ' length: ', length)
-
-    # for i in range(1, 6):
-    #     x[length + i] = 
+    for i in range(1, 6):
+        row = []
+        row.append(start + i * offset) # append the date first
+        for column in x.drop('Date', axis=1):
+            row.append(independent_var_predictions[column][i - 1])
+        x.loc[length + i] = row 
 
     return results

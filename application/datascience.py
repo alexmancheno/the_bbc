@@ -44,7 +44,6 @@ def callProc(procName):
         result = cursor.fetchall()
     return result
     
-
 def query(q):
     with SSHTunnelForwarder(
         ('97.107.142.134', 22),

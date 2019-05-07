@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from datascience import query, linear_regression, callProc, generate_query
+from datascience import query, linear_regression, callProc, generate_query, table
 
 app = Flask(__name__)
 CORS(app)

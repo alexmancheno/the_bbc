@@ -11,6 +11,20 @@ import matplotlib as mpl
 from matplotlib import pyplot as plt
 import datetime as dt
 
+def callProc(procName):
+    with SSHTunnelForwarder(
+        ('97.107.142.134', 22), 
+        ssh_username="root",
+        ssh_password="the_bbc123",
+        remote_bind_address=('localhost', 3306)
+    )as server:
+        conn = pymysql.connect(host='localhost', user='admin', password='radman', db='BBC', port=server.local_bind_port)
+        cursor = conn.cursor()
+        cursor.callproc(procName)
+        result = cursor.fetchall()
+    return result
+    
+
 def query(q):
     with SSHTunnelForwarder(
         ('97.107.142.134', 22),

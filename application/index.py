@@ -1,9 +1,26 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from datascience import query, linear_regression, callProc, generate_query, table
+from itertools import combinations
+import operator
 
 app = Flask(__name__)
 CORS(app)
+
+# Returns a list of regressions using all possible permutations
+# of the independent variables in "table"
+@app.route('/reglist')
+def reglist():
+    global table
+    keyList = list(table.keys())
+    results = []
+    for x in range(len(keyList)):
+        comb = combinations(keyList, (x+1))
+        for c in comb:
+            results.append(linear_regression(generate_query(c)))
+    results.sort(key=operator.itemgetter('kfolds_linear_regression_score'))
+    return jsonify(results)
+        
 
 # Goal is to return JSON after using the methods in datascience.py
 # Example usage: http://localhost:8080/regression?vars=MBS,U

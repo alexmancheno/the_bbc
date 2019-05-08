@@ -1,5 +1,5 @@
 ## For the backend
-#### Only do if you want to use with virtual environment
+**Note:** the following commands should be ran at 'application/'
 Install python3 pip:
 ```
 sudo apt-get install python3-pip
@@ -35,10 +35,9 @@ To run:
 python3 index.py
 ```
 
-To transfer the python code to server:
+To transfer the python and `requirements.txt` code to server:
 ```
-scp -r *.py root@97.107.142.134:/root/apps/the_bbc
-scp requirements.txt root@97.107.142.134:/root/apps/the_bbc
+scp -r *.py requirements.txt root@97.107.142.134:/root/apps/the_bbc
 ```
 
 To restart the python flask server (while logged in the server):
@@ -57,13 +56,13 @@ cd /root/apps/the_bbc
 pip3 install -r requirements.txt
 ```
 
-The above will only work if `requirements.txt` is updated. Otherwise, need to install new dependency manually:
+The above will only work if `requirements.txt` is updated. Otherwise, you need to install new dependency manually:
 ```
 pip3 install my_new_dependency
-``
+```
 
 ## For the frontend
-**Note:** the following commands should be ran at 'frontend/react-app'
+**Note:** the following commands should be ran at 'frontend/react-app/'
 
 To deploy to server:
 ```

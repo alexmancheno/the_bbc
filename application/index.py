@@ -38,8 +38,7 @@ def reglist():
 def regression():
     global table
     independent_vars = request.args['vars'].split(',')
-    query = generate_query(independent_vars)
-    results = linear_regression(query)
+    results = linear_regression(independent_vars)
     return jsonify(results)
 
 @app.route('/actualData')

@@ -61,14 +61,17 @@ def query(q):
         conn.close()
         return df
 
-def linear_regression(q):
+# parameter: a list of indepenedent variables
+def linear_regression(independent_vars):
     # what will be returned at the end
-    results = {}
+    results = {'independent_variables': independent_vars}
+
+    # build the sql query string
+    q = generate_query(independent_vars)
 
     # query database and return results as a DataFrame
     df = query(q)
     x = df
-    # x = df.drop('Date', axis=1)
     
     y = x['Mortgage_Rate'] # type: Series
 
@@ -97,10 +100,15 @@ def linear_regression(q):
     for i in range(0, len(r)):
         r[i][0] = str(r[i][0])
     
+    coeff_arr = []
+    coeff_num_arr = lm.coef_.tolist()
+    for i in range(0, len(independent_vars)):
+        coeff_arr.append({'independent_var':independent_vars[i], 'coefficient':coeff_num_arr[i]})
+
     hlr = {}
     results['true_vs_prediction'] = r
+    hlr['coefficients'] = coeff_arr
     hlr['R^2'] = lm.score(x.drop('Date', axis=1), y)
-    hlr['coefficients'] = pd.DataFrame(lm.coef_, x.drop('Date', axis=1).columns, columns=['Coefficient']).to_dict()
     hlr['intercept'] = lm.intercept_
     hlr['mean_absolute_error'] = metrics.mean_absolute_error(y_test, y_pred)
     hlr['mean_squared_error'] = metrics.mean_squared_error(y_test, y_pred)
@@ -124,8 +132,7 @@ def linear_regression(q):
     kfcv['number_of_splits'] = k
     kfcv['R^2'] = np.mean(scores)
 
-    results['number_of_splits'] = k
-    results['kfoR^2'] = k
+    results['k_folds_linear_regression'] = kfcv
     return results
 
 def linear_regression_r_squared(q, independent_vars):

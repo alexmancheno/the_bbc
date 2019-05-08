@@ -61,12 +61,12 @@ def query(q):
         conn.close()
         return df
 
-def linear_regression(s):
+def linear_regression(q):
     # what will be returned at the end
     results = {}
 
     # query database and return results as a DataFrame
-    df = query(s)
+    df = query(q)
     x = df
     # x = df.drop('Date', axis=1)
 
@@ -82,8 +82,7 @@ def linear_regression(s):
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=0)
     lm.fit(x_train.drop('Date', axis=1), y_train) # runs linear regression
     y_pred = lm.predict(x_test.drop('Date', axis=1))
-    # lm.fit(x_train.drop('Date', axis=1), y_train.drop('Date', axis=1))
-    # y_pred = lm.predict(x_test.drop('Date', axis=1))
+
 
     df1 = x_test.filter(items=['Date']) # dates
     df2 = pd.DataFrame(y_pred.flatten()) # predictions
@@ -130,4 +129,30 @@ def linear_regression(s):
 
     results['number_of_splits'] = k
     results['kfoR^2'] = k
+    return results
+
+def linear_regression_r_squared(q, independent_vars):
+    results = {}
+
+    x = query(q).drop('Date', axis=1)
+    y = x['Mortgage_Rate']
+    x = x.drop('Mortgage_Rate', axis=1)
+
+    k = 5
+    kf = KFold(n_splits=k, random_state=None, shuffle=False)
+    kf.get_n_splits(x)
+    scores = []
+    for train_index, test_index in kf.split(x):
+        x_train, x_test = x.iloc[train_index], x.iloc[test_index]
+        y_train, y_test = y.iloc[train_index], y.iloc[test_index]
+        lm = linear_model.LinearRegression()  
+        lm.fit(x_train, y_train)
+        y_pred = lm.predict(x_test)
+        scores.append(lm.score(x, y))
+
+    results = {
+        'independent_variables': independent_vars,
+        'r^2': np.mean(scores)
+    }
+
     return results

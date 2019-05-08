@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from datascience import query, linear_regression, callProc, generate_query, table
+from datascience import query, linear_regression, callProc, generate_query, table, linear_regression_r_squared
 from itertools import combinations
 import operator
 
@@ -16,22 +16,18 @@ def reglist():
     keyList = list(table.keys())
     results = []
     count = 0
+    errors = 0
     for x in range(len(keyList)):
         comb = combinations(keyList, (x+1))
         for c in list(comb):
             try:
                 q = generate_query(c)
-                #results.append(linear_regression(generate_query(list(c))))
+                results.append(linear_regression_r_squared(q, list(c)))
                 count +=1
-                print(count,":", list(c));
-                print(q)
-                print("---------------")
-                results.append(linear_regression(generate_query(list(c))))
             except:
-                print('Error: ')
-                print('\tlist: ', list(comb))
-                print(q)
-    results.sort(key=operator.itemgetter('kfolds_R^2'), reverse=True)
+                errors +=1
+    print('success count: ', count, 'error count: ', error)
+    results.sort(key=operator.itemgetter('r^2'), reverse=True)
     return jsonify(results)
         
 
@@ -73,6 +69,16 @@ def dependents():
     result = ["DEPEND1", "DEPEND2"]
     print(proc)
     return jsonify(proc)
+
+# Returns the R^2 value for the k-folds cross validation linear regression based in the independent values
+# Example: http://localhost:8080/r_squared?vars=MBS,GDP,U
+@app.route('/r_squared')
+def r_squared():
+    global table
+    independent_vars = request.args['vars'].split(',')
+    query = generate_query(independent_vars)
+    results = linear_regression_r_squared(query, independent_vars)
+    return jsonify(results)
 
 if __name__ == '__main__':
     app.run(host='localhost', port=8080)

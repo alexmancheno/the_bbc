@@ -28,7 +28,7 @@ def reglist():
             except:
                 errors +=1
     print('success count: ', count, ', error count: ', errors)
-    results.sort(key=operator.itemgetter('r^2'), reverse=True)
+    results.sort(key=operator.itemgetter('k_folds_linear_regression[r^2]'), reverse=True)
     return jsonify(results)
         
 

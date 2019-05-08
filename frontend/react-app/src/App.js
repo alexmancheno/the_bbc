@@ -14,14 +14,13 @@ import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import Item from './components/listitem';
 import SimpleLineChart from './components/simpleline';
-import Fab from '@material-ui/core/Fab';
-import NavigationIcon from '@material-ui/icons/Navigation';
+import ResultsTable from './components/resultstable'
 import Form from './components/form';
+import blue from '@material-ui/core/colors/blue';
 import SimpleTable from './components/simpletable';
 import Axios from 'axios';
 
 const drawerWidth = 240;
-const fs = require('fs');
 
 const styles = theme => ({
   root: {
@@ -29,6 +28,7 @@ const styles = theme => ({
   },
   toolbar: {
     paddingRight: 24,
+    background: blue[500]
   },
   toolbarIcon: {
     display: 'flex',
@@ -112,40 +112,32 @@ class App extends Component {
     this.state = {
       open: false,
       data: null,
-      kfold: null
+      results: null,
+      metadata: null
     };
+    this.getResults();
   }
 
-  isCache = (s) =>{
-    if(fs.existsSync(`cache/${s}.json`))
-      return true;
-  
-    return false;
-  }
-
-  getkfolds = () =>{
-    if(this.isCache('kfolds.json')){
-      this.setState({kfold: fs.createReadStream(`cache/kfold.json`)})
-    }
-    Axios.get('http://localhost:8080/reglist')
-      .then(response => {
-        this.setState({kfold: response});
-      })
-    
-  }
   
 
   fetch = (s) =>{
     console.log(s)
     Axios.get('http://localhost:8080/regression?vars='+s)
       .then(response => {
-        console.log(response.data.true_vs_prediction)
         let size = response.data.true_vs_prediction.length
         let data = new Array();
         for(let i = 0; i< size; i++){
           data.push({Date: response.data.true_vs_prediction[i][0], Predicted: response.data.true_vs_prediction[i][1], Actual: response.data.true_vs_prediction[i][2]});
         }
-        this.setState({data: data});
+        this.setState({data: data, metadata:response.data.holdout_linear_regression});
+      })
+  }
+
+  getResults = () =>{
+    Axios.get('http://localhost:8080/reglist')
+      .then(response => {
+        this.setState({results: response});
+        console.log(this.state.results)
       })
   }
 
@@ -191,13 +183,24 @@ class App extends Component {
         </Drawer>
         <main className={classes.content}>
           <div className={classes.appBarSpacer} />
+          {/* <Typography variant="h4" gutterBottom component="h2">
+            Linear Regression/ K Folds Results
+          </Typography>
+          <Typography component="div" className={classes.chartContainer}>
+            <ResultsTable prop = {this.state}/>
+          </Typography> */}
           <Typography variant="h4" gutterBottom component="h2">
-            Results
+            Custom
           </Typography>
           <Typography component="div" className={classes.chartContainer}>
             <SimpleLineChart prop={this.state}/>
           </Typography>
-          <Form onSubmit={this.fetch}></Form>
+          <Typography component="div" className={classes.chartContainer}>
+            <Form onSubmit={this.fetch}></Form>
+          </Typography>
+          <Typography component="div" className={classes.chartContainer}>
+            <SimpleTable prop = {this.state}/>
+          </Typography>
         </main>
       </div>
     );

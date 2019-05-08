@@ -14,7 +14,7 @@ class SimpleLineChart extends Component{
     return (
       <ResponsiveContainer width="99%" height={320}>
         <LineChart data={this.props.prop.data}>
-          <XAxis dataKey="name" />
+          <XAxis dataKey="Date" />
           <YAxis />
           <CartesianGrid vertical={false} strokeDasharray="3 3" />
           <Tooltip />

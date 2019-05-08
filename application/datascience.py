@@ -68,7 +68,7 @@ def linear_regression(independent_vars):
 
     # build the sql query string
     q = generate_query(independent_vars)
-
+    print(q)
     # query database and return results as a DataFrame
     df = query(q)
     x = df
@@ -83,7 +83,7 @@ def linear_regression(independent_vars):
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=0)
     lm.fit(x_train.drop('Date', axis=1), y_train) # runs linear regression
     y_pred = lm.predict(x_test.drop('Date', axis=1))
-
+    print(x_test)
 
     df1 = x_test.filter(items=['Date']) # dates
     df2 = pd.DataFrame(y_pred.flatten()) # predictions
@@ -131,7 +131,6 @@ def linear_regression(independent_vars):
     kfcv = {}
     kfcv['number_of_splits'] = k
     kfcv['R^2'] = np.mean(scores)
-
     results['k_folds_linear_regression'] = kfcv
     return results
 

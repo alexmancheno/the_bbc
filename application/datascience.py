@@ -66,7 +66,8 @@ def linear_regression(s):
     results = {}
 
     # query database and return results as a DataFrame
-    x = query(s).drop('Date', axis=1)
+    df = query(s)
+    x = df.drop('Date', axis=1)
 
     # the target variable
     y = x['Mortgage_Rate']
@@ -79,6 +80,15 @@ def linear_regression(s):
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=0)
     lm.fit(x_train, y_train)
     y_pred = lm.predict(x_test)
+
+    df1 = df.filter(items=['Date']) 
+    df2 = pd.DataFrame(y_pred.flatten())
+    df3 = y_test.to_frame()
+
+    # print(df1)
+    # print(df2)
+    # print(df3)
+
     hlr = {}
     hlr['R^2'] = lm.score(x, y)
     hlr['coefficients'] = pd.DataFrame(lm.coef_, x.columns, columns=['Coefficient']).to_dict()
@@ -100,9 +110,8 @@ def linear_regression(s):
         predictions = lm.predict(x_test)
         scores.append(lm.score(x, y))
 
-    kfcv = {}
-    kfcv['number_of_splits'] = k
-    kfcv['R^2'] = np.mean(scores)
 
-    results['kfolds_linear_regression_score'] = kfcv
+
+    results['number_of_splits'] = k
+    results['kfolds_R^2'] = np.mean(scores)
     return results

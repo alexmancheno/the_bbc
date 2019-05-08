@@ -13,7 +13,7 @@ import datetime as dt
 
 table = {
     'CPI': {'table_name': 'BBC.Consumer_Price_Index_View', 'column_name':  'BBC.Consumer_Price_Index_View.Average_Cost'},
-    'CPIHA': {'table_name': 'BBC.CPI_Housing_Average_View', 'column_name': 'BBC.CPI_Housing_Average_View.Housing_Average'},
+    'CPIHA': {'table_name': 'BBC.CPI_Housing_Average_View', 'column_name': 'BBC.CPI_Housing_Average_View.Date'},
     'DJI' : {'table_name': 'BBC.Dow_Jones_Index_View', 'column_name': 'BBC.Dow_Jones_Index_View.Close'},
     'FIR' : {'table_name': 'BBC.Federal_Interest_Rates_View', 'column_name': 'BBC.Federal_Interest_Rates_View.Prime_Rate'},
     'GDP': {'table_name': 'BBC.Gross_Domestic_Product_View', 'column_name': 'BBC.Gross_Domestic_Product_View.GDP'},
@@ -67,31 +67,43 @@ def linear_regression(s):
 
     # query database and return results as a DataFrame
     df = query(s)
-    x = df.drop('Date', axis=1)
+    x = df
+    # x = df.drop('Date', axis=1)
 
     # the target variable
-    y = x['Mortgage_Rate']
+    
+    y = x['Mortgage_Rate'] # type: Series
 
     # drop the target variable from the x-axis
-    x = x.drop('Mortgage_Rate', axis=1)
+    x = x.drop('Mortgage_Rate', axis=1) # returns DataFrame
 
     # run a linear regression holding out 20% of data as test data
     lm = linear_model.LinearRegression()
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=0)
-    lm.fit(x_train, y_train)
-    y_pred = lm.predict(x_test)
+    lm.fit(x_train.drop('Date', axis=1), y_train) # runs linear regression
+    y_pred = lm.predict(x_test.drop('Date', axis=1))
+    # lm.fit(x_train.drop('Date', axis=1), y_train.drop('Date', axis=1))
+    # y_pred = lm.predict(x_test.drop('Date', axis=1))
 
-    df1 = df.filter(items=['Date']) 
-    df2 = pd.DataFrame(y_pred.flatten())
-    df3 = y_test.to_frame()
+    df1 = x_test.filter(items=['Date']) # dates
+    df2 = pd.DataFrame(y_pred.flatten()) # predictions
+    df3 = y_test.to_frame() # actual
+    
+    arr1 = df1['Date'].tolist()
+    arr2 = df2[0].tolist()
+    arr3 = df3['Mortgage_Rate'].tolist()
 
-    # print(df1)
-    # print(df2)
-    # print(df3)
-
+    r = []
+    for i in range(0, len(arr1)):
+        r.append([arr1[i], arr2[i], arr3[i]])
+    r = sorted(r, key=lambda x: x[0])
+    for i in range(0, len(r)):
+        r[i][0] = str(r[i][0])
+    # print(r)
     hlr = {}
-    hlr['R^2'] = lm.score(x, y)
-    hlr['coefficients'] = pd.DataFrame(lm.coef_, x.columns, columns=['Coefficient']).to_dict()
+    results['true_vs_prediction'] = r
+    hlr['R^2'] = lm.score(x.drop('Date', axis=1), y)
+    hlr['coefficients'] = pd.DataFrame(lm.coef_, x.drop('Date', axis=1).columns, columns=['Coefficient']).to_dict()
     hlr['intercept'] = lm.intercept_
     hlr['mean_absolute_error'] = metrics.mean_absolute_error(y_test, y_pred)
     hlr['mean_squared_error'] = metrics.mean_squared_error(y_test, y_pred)
@@ -106,12 +118,14 @@ def linear_regression(s):
         x_train, x_test = x.iloc[train_index], x.iloc[test_index]
         y_train, y_test = y.iloc[train_index], y.iloc[test_index]
         lm = linear_model.LinearRegression()
-        lm.fit(x_train, y_train)
-        predictions = lm.predict(x_test)
-        scores.append(lm.score(x, y))
+        lm.fit(x_train.drop('Date', axis=1), y_train)
+        predictions = lm.predict(x_test.drop('Date', axis=1))
+        scores.append(lm.score(x.drop('Date', axis=1), y))
 
-
+    kfcv = {}
+    kfcv['number_of_splits'] = k
+    kfcv['R^2'] = np.mean(scores)
 
     results['number_of_splits'] = k
-    results['kfolds_R^2'] = np.mean(scores)
+    results['kfoR^2'] = k
     return results

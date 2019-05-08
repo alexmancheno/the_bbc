@@ -20,14 +20,17 @@ def reglist():
         for c in list(comb):
             try:
                 q = generate_query(c)
-                results.append(linear_regression(generate_query(list(c))))
-                print(count)
+                #results.append(linear_regression(generate_query(list(c))))
                 count +=1
+                print(count,":", list(c));
+                print(q)
+                print("---------------")
+                results.append(linear_regression(generate_query(list(c))))
             except:
                 print('Error: ')
                 print('\tlist: ', list(comb))
                 print(q)
-    results.sort(key=operator.itemgetter('kfolds_linear_regression_score'), reverse=True)
+    results.sort(key=operator.itemgetter('kfolds_R^2') , reverse=True)
     return jsonify(results)
         
 

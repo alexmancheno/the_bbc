@@ -100,9 +100,7 @@ def linear_regression(s):
         predictions = lm.predict(x_test)
         scores.append(lm.score(x, y))
 
-    kfcv = {}
-    kfcv['number_of_splits'] = k
-    kfcv['R^2'] = np.mean(scores)
-
-    results['kfolds_linear_regression_score'] = kfcv
+        
+    results['number_of_splits'] = k
+    results['kfolds_R^2'] = np.mean(scores)
     return results

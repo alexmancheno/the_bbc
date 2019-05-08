@@ -99,7 +99,7 @@ def linear_regression(s):
     r = sorted(r, key=lambda x: x[0])
     for i in range(0, len(r)):
         r[i][0] = str(r[i][0])
-    # print(r)
+    
     hlr = {}
     results['true_vs_prediction'] = r
     hlr['R^2'] = lm.score(x.drop('Date', axis=1), y)
@@ -118,6 +118,7 @@ def linear_regression(s):
         x_train, x_test = x.iloc[train_index], x.iloc[test_index]
         y_train, y_test = y.iloc[train_index], y.iloc[test_index]
         lm = linear_model.LinearRegression()
+
         lm.fit(x_train.drop('Date', axis=1), y_train)
         predictions = lm.predict(x_test.drop('Date', axis=1))
         scores.append(lm.score(x.drop('Date', axis=1), y))
@@ -125,6 +126,7 @@ def linear_regression(s):
     kfcv = {}
     kfcv['number_of_splits'] = k
     kfcv['R^2'] = np.mean(scores)
+
 
     results['number_of_splits'] = k
     results['kfoR^2'] = k

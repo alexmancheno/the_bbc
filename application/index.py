@@ -18,7 +18,7 @@ def reglist():
         comb = combinations(keyList, (x+1))
         for c in comb:
             results.append(linear_regression(generate_query(c)))
-    results.sort(key=operator.itemgetter('kfolds_linear_regression_score'))
+    results.sort(key=operator.itemgetter('kfolds_linear_regression_score'), reverse=True)
     return jsonify(results)
         
 

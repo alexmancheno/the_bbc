@@ -20,7 +20,7 @@ def reglist():
         for c in list(comb):
             try:
                 q = generate_query(c)
-                results.append(linear_regression(generate_query(c)))
+                results.append(linear_regression(generate_query(list(c))))
                 print(count)
                 count +=1
             except:

@@ -12,6 +12,7 @@ CORS(app)
 # curl http://localhost:8080/reglist
 @app.route('/reglist')
 def reglist():
+    print('attempting to run /reglist')
     global table
     keyList = list(table.keys())
     results = []
@@ -26,7 +27,7 @@ def reglist():
                 count +=1
             except:
                 errors +=1
-    print('success count: ', count, 'error count: ', errors)
+    print('success count: ', count, ', error count: ', errors)
     results.sort(key=operator.itemgetter('r^2'), reverse=True)
     return jsonify(results)
         

@@ -41,6 +41,12 @@ def regression():
     results = linear_regression(query)
     return jsonify(results)
 
+@app.route('/actualData')
+def actualData():
+    global table
+    results = query('SELECT * FROM BBC.Mortgage_Rates_View;')
+    return jsonify(results.to_dict())
+
 # Returns a list of the independent variables we can use
 @app.route('/vars')
 def vars():

@@ -16,10 +16,12 @@ import Item from './components/listitem';
 import SimpleLineChart from './components/simpleline';
 import Fab from '@material-ui/core/Fab';
 import NavigationIcon from '@material-ui/icons/Navigation';
+import Form from './components/form';
 import SimpleTable from './components/simpletable';
 import Axios from 'axios';
 
 const drawerWidth = 240;
+const fs = require('fs');
 
 const styles = theme => ({
   root: {
@@ -105,22 +107,43 @@ const styles = theme => ({
 });
 
 class App extends Component {
-  state = {
-    open: false,
-    data: null
-  };
+  constructor(){
+    super()
+    this.state = {
+      open: false,
+      data: null,
+      kfold: null
+    };
+  }
 
-  fetch = () =>{
-    // Axios.get('http://localhost:8080/actualData')
-    //   .then(response => this.setState({actual: response.data}))
-    
-    //   console.log(this.state.actual)
-    Axios.get('http://localhost:8080/actualData')
+  isCache = (s) =>{
+    if(fs.existsSync(`cache/${s}.json`))
+      return true;
+  
+    return false;
+  }
+
+  getkfolds = () =>{
+    if(this.isCache('kfolds.json')){
+      this.setState({kfold: fs.createReadStream(`cache/kfold.json`)})
+    }
+    Axios.get('http://localhost:8080/reglist')
       .then(response => {
-        let size = Object.keys(response.data.Date).length;
+        this.setState({kfold: response});
+      })
+    
+  }
+  
+
+  fetch = (s) =>{
+    console.log(s)
+    Axios.get('http://localhost:8080/regression?vars='+s)
+      .then(response => {
+        console.log(response.data.true_vs_prediction)
+        let size = response.data.true_vs_prediction.length
         let data = new Array();
         for(let i = 0; i< size; i++){
-          data.push({Date: response.data.Date[i], Actual: response.data.Mortgage_Rate[i], Predicted: 0});
+          data.push({Date: response.data.true_vs_prediction[i][0], Predicted: response.data.true_vs_prediction[i][1], Actual: response.data.true_vs_prediction[i][2]});
         }
         this.setState({data: data});
       })
@@ -136,7 +159,6 @@ class App extends Component {
 
   render() {
     const { classes } = this.props;
-
     return (
       <div className={classes.root}>
         <CssBaseline />
@@ -175,11 +197,7 @@ class App extends Component {
           <Typography component="div" className={classes.chartContainer}>
             <SimpleLineChart prop={this.state}/>
           </Typography>
-
-          <Fab onClick={this.fetch} variant="extended" aria-label="Delete" className={classes.fab}>
-            <NavigationIcon className={classes.extendedIcon} />
-              Extended
-          </Fab>
+          <Form onSubmit={this.fetch}></Form>
         </main>
       </div>
     );

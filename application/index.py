@@ -14,11 +14,20 @@ def reglist():
     global table
     keyList = list(table.keys())
     results = []
+    count = 0
     for x in range(len(keyList)):
         comb = combinations(keyList, (x+1))
-        for c in comb:
-            results.append(linear_regression(generate_query(c)))
-    results.sort(key=operator.itemgetter('kfolds_linear_regression_score'))
+        for c in list(comb):
+            try:
+                q = generate_query(c)
+                results.append(linear_regression(generate_query(c)))
+                print(count)
+                count +=1
+            except:
+                print('Error: ')
+                print('\tlist: ', list(comb))
+                print(q)
+    results.sort(key=operator.itemgetter('kfolds_linear_regression_score'), reverse=True)
     return jsonify(results)
         
 

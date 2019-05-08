@@ -124,5 +124,9 @@ dmypy.json
 venv
 __pycache__
 
+<<<<<<< HEAD
+node_modules
+=======
 #node 
 node_modules/
+>>>>>>> 20e6b1ec293e0b845d38128e5d3c1fb40616ec07

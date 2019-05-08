@@ -9,6 +9,7 @@ CORS(app)
 
 # Returns a list of regressions using all possible permutations
 # of the independent variables in "table"
+# curl http://localhost:8080/reglist
 @app.route('/reglist')
 def reglist():
     global table
@@ -30,7 +31,7 @@ def reglist():
                 print('Error: ')
                 print('\tlist: ', list(comb))
                 print(q)
-    results.sort(key=operator.itemgetter('kfolds_R^2') , reverse=True)
+    results.sort(key=operator.itemgetter('kfolds_R^2'), reverse=True)
     return jsonify(results)
         
 

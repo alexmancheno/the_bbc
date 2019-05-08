@@ -20,6 +20,8 @@ def reglist():
     errors = 0
     for x in range(len(keyList)):
         comb = combinations(keyList, (x+1))
+        if count > 2:
+            break
         for c in list(comb):
             try:
                 q = generate_query(c)
@@ -28,7 +30,7 @@ def reglist():
             except:
                 errors +=1
     print('success count: ', count, ', error count: ', errors)
-    results.sort(key=operator.itemgetter('k_folds_linear_regression[r^2]'), reverse=True)
+    results.sort(key=lambda x: x['k_folds_linear_regression']['R^2'], reverse = True)
     return jsonify(results)
         
 
@@ -39,6 +41,7 @@ def regression():
     global table
     independent_vars = request.args['vars'].split(',')
     results = linear_regression(independent_vars)
+    print(results['k_folds_linear_regression']['R^2'])
     return jsonify(results)
 
 @app.route('/actualData')

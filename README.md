@@ -1,3 +1,4 @@
+## For the backend
 #### Only do if you want to use with virtual environment
 Install python3 pip:
 ```
@@ -48,4 +49,34 @@ systemctl restart the_bbc.service
 To check the status of the flask server
 ```
 systemctl status the_bbc.service
+```
+
+If new dependencies were added to the flask app, you need to install them on the server
+```
+cd /root/apps/the_bbc
+pip3 install -r requirements.txt
+```
+
+The above will only work if `requirements.txt` is updated. Otherwise, need to install new dependency manually:
+```
+pip3 install my_new_dependency
+``
+
+## For the frontend
+**Note:** the following commands should be ran at 'frontend/react-app'
+
+To deploy to server:
+```
+scp -r public src package-lock.json package.json root@97.107.142.134:/root/apps/frontend
+```
+
+After deploying, you must restart the React app while logged into server:
+```
+sudo systemctl restart the_bbc_frontend.service
+```
+
+If new dependencies were added to `package.json`, you need to install them while logged onto server:
+```
+cd /root/apps/frontend
+npm install --save
 ```

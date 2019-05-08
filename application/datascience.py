@@ -69,8 +69,6 @@ def linear_regression(q):
     df = query(q)
     x = df
     # x = df.drop('Date', axis=1)
-
-    # the target variable
     
     y = x['Mortgage_Rate'] # type: Series
 
@@ -125,7 +123,6 @@ def linear_regression(q):
     kfcv = {}
     kfcv['number_of_splits'] = k
     kfcv['R^2'] = np.mean(scores)
-
 
     results['number_of_splits'] = k
     results['kfoR^2'] = k

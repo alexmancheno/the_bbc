@@ -26,7 +26,7 @@ def reglist():
                 count +=1
             except:
                 errors +=1
-    print('success count: ', count, 'error count: ', error)
+    print('success count: ', count, 'error count: ', errors)
     results.sort(key=operator.itemgetter('r^2'), reverse=True)
     return jsonify(results)
         

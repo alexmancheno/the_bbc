@@ -29,7 +29,7 @@ class Dash extends Component{
       return(
 				<div>
 					<Typography variant="h4" gutterBottom component="h2">
-            Mortage Interest Rate Prediction
+					Linear Regression Engine for Mortgage Rates
           </Typography>
 					<Paper className={classes.root}>
 						<Table className={classes.table}>

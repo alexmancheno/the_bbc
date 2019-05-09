@@ -40,9 +40,7 @@ def reglist():
 def regression():
     global table
     independent_vars = request.args['vars'].split(',')
-    print(independent_vars)
     results = linear_regression(independent_vars)
-    print(results['k_folds_linear_regression']['R^2'])
     return jsonify(results)
 
 @app.route('/actualData')

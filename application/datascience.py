@@ -13,7 +13,7 @@ import datetime as dt
 
 table = {
     'CPI': {'table_name': 'BBC.Consumer_Price_Index_View', 'column_name':  'BBC.Consumer_Price_Index_View.Average_Cost'},
-    'CPIHA': {'table_name': 'BBC.CPI_Housing_Average_View', 'column_name': 'BBC.CPI_Housing_Average_View.Date'},
+    'CPIHA': {'table_name': 'BBC.CPI_Housing_Average_View', 'column_name': 'BBC.CPI_Housing_Average_View.Housing_Average'},
     'DJI' : {'table_name': 'BBC.Dow_Jones_Index_View', 'column_name': 'BBC.Dow_Jones_Index_View.DJIClose'},
     'FIR' : {'table_name': 'BBC.Federal_Interest_Rates_View', 'column_name': 'BBC.Federal_Interest_Rates_View.Prime_Rate'},
     'GDP': {'table_name': 'BBC.Gross_Domestic_Product_View', 'column_name': 'BBC.Gross_Domestic_Product_View.GDP'},
@@ -68,7 +68,7 @@ def linear_regression(independent_vars):
 
     # build the sql query string
     q = generate_query(independent_vars)
-    print(q)
+
     # query database and return results as a DataFrame
     df = query(q)
     x = df
@@ -83,8 +83,9 @@ def linear_regression(independent_vars):
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=0)
     lm.fit(x_train.drop('Date', axis=1), y_train) # runs linear regression
     y_pred = lm.predict(x_test.drop('Date', axis=1))
-    print(x_test)
 
+
+    # print(x_test)
     df1 = x_test.filter(items=['Date']) # dates
     df2 = pd.DataFrame(y_pred.flatten()) # predictions
     df3 = y_test.to_frame() # actual

@@ -9,21 +9,21 @@ class Item extends Component{
   render(){
     return(
       <div>
-        <ListItem button>
+        <ListItem button onClick={this.props.onClick(0)}>
           <ListItemIcon>
             <DashboardIcon />
           </ListItemIcon>
           <ListItemText primary="Dashboard" />
         </ListItem>
-        <ListItem button>
+        <ListItem button onClick={this.props.onClick(1)}>
           <ListItemIcon>
             <ResultsIcon />
           </ListItemIcon>
           <ListItemText primary="Results" />
         </ListItem>
-        <ListItem button>
+        <ListItem button onClick={this.props.onClick(2)}>
           <ListItemIcon>
-            <EditIcon />
+            <EditIcon  />
           </ListItemIcon>
           <ListItemText primary="Edit" />
         </ListItem>

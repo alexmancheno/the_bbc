@@ -139,7 +139,7 @@ class App extends Component {
 
   fetch = (s) =>{
     console.log(s)
-    Axios.get('http://localhost:8080/regression?vars='+s)
+    Axios.get('http://97.107.142.134:81/regression?vars='+s)
       .then(response => {
         let size = response.data.true_vs_prediction.length
         let data = new Array();

@@ -52,7 +52,7 @@ class Form extends React.Component {
 		}
 
 		componentDidMount() {
-			Axios.get('http://97.107.142.134:81/vars')
+			Axios.get('http://localhost:8080/vars')
 				.then(response => {
 					this.setState({vars: response.data});
 					let choosen = []

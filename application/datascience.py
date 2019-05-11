@@ -7,8 +7,6 @@ from sshtunnel import SSHTunnelForwarder
 from sklearn import linear_model
 from sklearn.model_selection import train_test_split, KFold
 from sklearn import metrics
-import matplotlib as mpl
-from matplotlib import pyplot as plt
 import datetime as dt
 
 table = {

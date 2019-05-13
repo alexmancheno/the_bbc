@@ -8,6 +8,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+import Button from '@material-ui/core/Button';
 
 const styles = {
   root: {
@@ -39,7 +40,7 @@ class ResultsTable extends Component {
 
 	switch = () =>{
 		const { classes } = this.props;
-		if(true){
+		if(this.props.prop.fetchResults){
 			return<Typography component="div" className={classes.chartContainer}>
 				<Paper className={classes.root}>
 					<Table className={classes.table}>
@@ -56,7 +57,7 @@ class ResultsTable extends Component {
 				</Paper>
 				</Typography>
 		}else{
-			return 'Babes'
+			return <Button type="submit"  size="small" onClick={this.props.onClick()} className={classes.primary}> Run Regression</Button>
 		}
 	}
 	render(){

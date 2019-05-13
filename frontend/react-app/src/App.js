@@ -127,8 +127,9 @@ class App extends Component {
       dashDisplay: true,
       resultDisplay: false,
       editDisplay: false,
+      fetchResults: false
     };
-
+    
     this.displayDash=this.displayDash.bind(this)
     this.displayResult=this.displayResult.bind(this)
     this.displayCustom=this.displayCustom.bind(this)
@@ -149,6 +150,15 @@ class App extends Component {
         this.setState({data: data, metadata:response.data.holdout_linear_regression})
 
       })
+  }
+
+  fetchResults = () =>{
+    if(this.state.fetchResults == false){
+      Axios.get('http://97.107.142.134:81/reglist')
+      .then(response => {
+        this.setState({fetchResults : true, reglist : response})
+      })
+    }
   }
 
   displayDash = ()=>{
@@ -173,7 +183,7 @@ class App extends Component {
   display = () =>{
     console.log(5)
     if(this.state.dashDisplay) return <Dash prop = {this.state}/>
-    if(this.state.resultDisplay) return <ResultsTable prop = {this.state.reglist}/>
+    if(this.state.resultDisplay) return <ResultsTable prop = {this.state.reglist} onClick={this.fetchResults}/>
     if(this.state.editDisplay) return <Custom className={this.props.classes.custom} onSubmit={this.fetch} prop = {this.state}></Custom>
   }
 

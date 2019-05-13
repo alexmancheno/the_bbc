@@ -36,15 +36,11 @@ class ResultsTable extends Component {
 		}
 		return data
 	}
-	render(){
-		const { classes } = this.props;
 
-		return (
-			<div>
-				<Typography variant="h4" gutterBottom component="h2">
-					Linear Regression/ K Folds Results
-				</Typography>
-				<Typography component="div" className={classes.chartContainer}>
+	switch = () =>{
+		const { classes } = this.props;
+		if(true){
+			return<Typography component="div" className={classes.chartContainer}>
 				<Paper className={classes.root}>
 					<Table className={classes.table}>
 						<TableHead>
@@ -59,6 +55,19 @@ class ResultsTable extends Component {
 					</Table>
 				</Paper>
 				</Typography>
+		}else{
+			return 'Babes'
+		}
+	}
+	render(){
+		const { classes } = this.props;
+
+		return (
+			<div>
+				<Typography variant="h4" gutterBottom component="h2">
+					Linear Regression/ K Folds Results
+				</Typography>
+				{this.switch()}
 			</div>
 		);
 	}

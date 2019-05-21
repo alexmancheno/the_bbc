@@ -53,6 +53,7 @@ def actualData():
 @app.route('/vars')
 def vars():
     global table
+    print('vars request received')
     arr = []
     for key in table.keys():
         arr.append(key)

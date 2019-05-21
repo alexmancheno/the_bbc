@@ -123,7 +123,7 @@ class App extends Component {
       data: null,
       results: null,
       metadata: null,
-      reglist: require('./cache/reglist.json'),
+      reglist: null,
       dashDisplay: true,
       resultDisplay: false,
       editDisplay: false,
@@ -152,13 +152,9 @@ class App extends Component {
       })
   }
 
-  fetchResults = () =>{
-    if(this.state.fetchResults == false){
-      Axios.get('http://97.107.142.134:81/reglist')
-      .then(response => {
-        this.setState({fetchResults : true, reglist : response})
-      })
-    }
+  saveReglist = (list) =>{
+    console.log(2)
+    this.setState({reglist : list})
   }
 
   displayDash = ()=>{
@@ -174,7 +170,6 @@ class App extends Component {
       editDisplay: false})
   };
   displayCustom = ()=>{
-    console.log(2)
     this.setState({dashDisplay: false,
       resultDisplay: false,
       editDisplay: true})
@@ -183,7 +178,7 @@ class App extends Component {
   display = () =>{
     console.log(5)
     if(this.state.dashDisplay) return <Dash prop = {this.state}/>
-    if(this.state.resultDisplay) return <ResultsTable prop = {this.state.reglist} onClick={this.fetchResults}/>
+    if(this.state.resultDisplay) return <ResultsTable prop={this.state.reglist} onSubmit={this.saveReglist}/>
     if(this.state.editDisplay) return <Custom className={this.props.classes.custom} onSubmit={this.fetch} prop = {this.state}></Custom>
   }
 
